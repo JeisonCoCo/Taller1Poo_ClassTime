@@ -23,25 +23,25 @@ namespace ConsoleApp1
 
         public Time(int hour)
         {
-            int _hour = ValidHour(hour);
+            _hour = ValidHour(hour);
         }
         public Time(int hour, int minute)
         {
-            int _hour = ValidHour(hour);
-            int _minute = ValidMinute(minute);
+            _hour = ValidHour(hour);
+            _minute = ValidMinute(minute);
         }
         public Time(int hour, int minute, int second)
         {
-            int _hour = ValidHour(hour);
-            int _minute = ValidMinute(minute);
-            int _second = ValidSecond(second);
+            _hour = ValidHour(hour);
+            _minute = ValidMinute(minute);
+            _second = ValidSecond(second);
         }
         public Time(int hour, int minute, int second, int millisecond)
         {
-            int _hour = ValidHour(hour);
-            int _minute = ValidMinute(minute);
-            int _second = ValidSecond(second);
-            int _millisecond = ValidMillisecond(millisecond);
+            _hour = ValidHour(hour);
+            _minute = ValidMinute(minute);
+            _second = ValidSecond(second);
+            _millisecond = ValidMillisecond(millisecond);
         }
         public int Hour
         {
@@ -63,11 +63,53 @@ namespace ConsoleApp1
             get => _second;
             set => _second = value;
         }
-        
+
+        public int ToMilliseconds()
+        {
+            return _hour * 3600000 + _minute * 60000 + _second * 1000 + _millisecond;
+        }
+        public int ToMinutes()
+        {
+            return _hour * 60 + _minute;
+        }
+        public int ToSeconds()
+        {
+            return _hour * 3600 + _minute * 60 + _second;
+        }
         public override string ToString()
         {
-            return $"{_hour:00}/{_minute:00}/{_second:00}/{_millisecond:000}";
+            int hourNoMilli = _hour % 12;
+            if (hourNoMilli == 0)
+                hourNoMilli = 12;
+            string amPm = _hour < 12 ? "AM" : "PM";
+
+            return $"{hourNoMilli:00}:{_minute:00}:{_second:00}.{_millisecond:000}{amPm}";
         }
+        internal Time Add(Time other)
+        {
+            int totalMilli = this._millisecond + other._millisecond;
+            int carrySecond = totalMilli / 1000;
+            int newMillisecond = totalMilli % 1000;
+
+            int totalSec = this._second + other._second + carrySecond;
+            int carryMinute = totalSec / 60;
+            int newSecond = totalSec % 60;
+
+            int totalMin = this._minute + other._minute + carryMinute;
+            int carryHour = totalMin / 60;
+            int newMinute = totalMin % 60;
+
+            int totalHour = this._hour + other._hour + carryHour;
+            int newHour = totalHour % 24;
+
+            return new Time(newHour, newMinute, newSecond, newMillisecond);
+        }
+
+        internal bool IsOtherDay(Time t4)
+        {
+            return (this.ToMilliseconds() + t4.ToMilliseconds()) >= 86400000;
+        }
+
         private int ValidHour(int hour)
         {
             if (hour < 0 || hour > 23)
@@ -100,5 +142,5 @@ namespace ConsoleApp1
             }
             return second;
         }
-        }
-        }
+    }
+}

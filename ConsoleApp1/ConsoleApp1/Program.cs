@@ -3,13 +3,26 @@
 try //cactura una parte para no tener horas no validas
 {
     var t1 = new Time();
-    var t2 = new Time(1, 1, 10);
-    var t3 = new Time(10, 08, 13);
-    Console.WriteLine($"The time {t1} ");
-    Console.WriteLine($"The time2 {t2} ");
-    Console.WriteLine($"The time3 {t3} ");
+    var t2 = new Time(14);
+    var t3 = new Time(9, 34);
+    var t4 = new Time(19, 45, 56);
+    var t5 = new Time(23,3, 45, 678);
+
+    var times = new List<Time>(){ t1, t2, t3, t4, t5 };
+
+    foreach (Time time in times)
+    {
+        Console.WriteLine($"Time: {time} ");
+        Console.WriteLine($"\tMinniseconds: {time.ToMilliseconds(),15:N0} ");
+        Console.WriteLine($"\tSeconds     : {time.ToSeconds(),15:N0} ");
+        Console.WriteLine($"\tMinutes     : {time.ToMinutes(),15:N0} ");
+        Console.WriteLine($"\tAdd         : {time.Add(t3),15:N0} ");
+        Console.WriteLine($"\tIs Other day: {time.IsOtherDay(t4)} ");
+        Console.WriteLine();
+    }
+    var t6 = new Time(45, -7, 90, -87);
 }
-catch (Exception ex)
+catch (Exception exception)
 {
-    Console.WriteLine(ex);
+    Console.WriteLine(exception.Message);
 }
