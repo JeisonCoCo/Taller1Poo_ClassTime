@@ -63,10 +63,21 @@ namespace ConsoleApp1
             get => _second;
             set => _second = value;
         }
-        
+
+        public int ToMilliseconds()
+        {
+            return _hour * 3600000 + _minute * 60000 + _second * 1000 + _millisecond;
+        }
+        public int ToSeconds()
+        {
+            return _hour * 3600 + _minute * 60 + _second;
+        }
         public override string ToString()
         {
-            return $"{_hour:00}/{_minute:00}/{_second:00}/{_millisecond:000}";
+            int hourNo = _hour % 12;
+            if (hourNo == 0)
+                hourNo = 12;
+            return $"{hourNo:00}:{_minute:00}:{_second:00}:{_millisecond:000}";
         }
         private int ValidHour(int hour)
         {
